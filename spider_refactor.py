@@ -13,6 +13,7 @@ class Login(object):
         self.url='http://xk.urp.seu.edu.cn/jw_service/service/stuCurriculum.action'
         self.cookies = cookielib.CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookies))
+
         for item in self.cookies:
             print item.name,' = ',item.value
 
@@ -22,11 +23,17 @@ class Login(object):
         post_data=urllib.urlencode(data)
         request = urllib2.Request(self.url,post_data)
 
-        response = self.opener.open(request)
+        try:
+            response = self.opener.open(request)
+        except urllib2.URLError,e:
+            if hasattr(e,"code"):
+                print e.code
+            if hasattr(e,"reason"):
+                print e.reason
+        else:
+            print "erro when open(request)"
 
-
-
-        string = str(response.geturl())
+        # string = str(response.geturl())
 
         page = response.read().decode('utf-8')
         pattern = re.compile(r'<td.*?width="20%".*?align="left">(.*?)</td>', re.S)
