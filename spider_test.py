@@ -6,6 +6,7 @@ import cookielib
 
 url = 'http://xk.urp.seu.edu.cn/jw_service/service/stuCurriculum.action'
 # request = urllib2.Request(url,data,headers)
+
 stuid='71113333'
 values = {'queryStudentId':stuid,'queryAcademicYear':'16-17-1'}
 data = urllib.urlencode(values)
@@ -19,4 +20,7 @@ for item in cookies:
     print item.name,' = ',item.value
 
 print response.read()
+
+
+
 
