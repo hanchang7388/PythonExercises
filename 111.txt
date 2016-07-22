@@ -1,0 +1,2 @@
+hello
+this is the first word writen in the file 
