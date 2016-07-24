@@ -31,9 +31,7 @@ class Login(object):
             if hasattr(e,"reason"):
                 print e.reason
         else:
-            print "erro when open(request)"
-
-        # string = str(response.geturl())
+            print "error when open(request)"
 
         page = response.read().decode('utf-8')
         pattern = re.compile(r'<td.*?width="20%".*?align="left">(.*?)</td>', re.S)
