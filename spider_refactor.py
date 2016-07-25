@@ -5,35 +5,47 @@ import urllib,urllib2
 import cookielib
 import re
 
+
 class Login(object):
-    def __init__(self, id , semester):
+    def __init__(self, id, semester):
         print "Initialing : ..."
-        self.stuid = id
+        self.stuid = str(id)
         self.semester=semester
-        self.url='http://xk.urp.seu.edu.cn/jw_service/service/stuCurriculum.action'
+        self.url = 'http://xk.urp.seu.edu.cn/jw_service/service/stuCurriculum.action'
+
         self.cookies = cookielib.CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookies))
 
-        for item in self.cookies:
-            print item.name,' = ',item.value
+        self.data = {'queryStudentId':self.stuid,'queryAcademicYear':self.semester}
+        self.post_data = urllib.urlencode(self.data)
+        self.request = urllib2.Request(self.url,self.post_data)
+
+        self.response = self.opener.open(self.request)
+        # try:
+        #     self.response = self.opener.open(self.request)
+        #     pass
+        # except urllib2.URLError,e:
+        #     if hasattr(e,"code"):
+        #         print e.code
+        #     if hasattr(e,"reason"):
+        #         print e.reason
+        # except Exception,e:
+        #     print Exception,":",e
+
+        # else:
+        #     print "error when open(request)"
+
+        # for item in self.cookies:
+        #     print item.name,' = ',item.value
 
     def get_info(self):
         #post data
-        data = {'queryStudentId':self.stuid,'queryAcademicYear':self.semester}
-        post_data=urllib.urlencode(data)
-        request = urllib2.Request(self.url,post_data)
+        # data = {'queryStudentId':self.stuid,'queryAcademicYear':self.semester}
+        # post_data=urllib.urlencode(data)
+        # request = urllib2.Request(self.url,post_data)
 
-        try:
-            response = self.opener.open(request)
-        except urllib2.URLError,e:
-            if hasattr(e,"code"):
-                print e.code
-            if hasattr(e,"reason"):
-                print e.reason
-        else:
-            print "error when open(request)"
-
-        page = response.read().decode('utf-8')
+        # response = self.opener.open(self.request)
+        page = self.response.read().decode('utf-8')
         pattern = re.compile(r'<td.*?width="20%".*?align="left">(.*?)</td>', re.S)
 
         if page:
@@ -46,18 +58,14 @@ class Login(object):
         if items:
             for item in items:
                 print item
+
             return None
         else:
             return "No data"
 
 if __name__ == '__main__':
-
-    for i in range(71113101,71113499):
+    for i in range(14113101,14113499):
         semester='16-17-1'
-        i=str(i)
-        # if isinstance(i,str):
-        #     print 1
-        # else:
-        #     print 0
         log=Login(i,semester)
         log.get_info()
+        del log
